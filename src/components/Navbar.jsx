@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Navbar.css';
 
-const Navbar = ({ itemCount, totalPrice, resetCart, cartItems }) => {
+const Navbar = ({ itemCount, totalPrice, resetCart, cartItems, removeFromCart }) => {
     const [showCartDetails, setShowCartDetails] = useState(false);
 
     const toggleCartDetails = () => {
@@ -56,8 +56,26 @@ const Navbar = ({ itemCount, totalPrice, resetCart, cartItems }) => {
                                 <h3>Cart Details:</h3>
                                 <ul>
                                     {cartItems.map((item, index) => (
-                                        <li key={index}>
-                                            {item.name} - {item.quantity} x ${item.price.toFixed(2)} = ${item.totalPrice.toFixed(2)}
+                                        <li key={index} className="cart-item">
+                                             <button
+                                                className="remove-one-button"
+                                                onClick={() => removeFromCart(item.name)} // same function
+                                            >
+                                                -
+                                            </button>
+                                            <img
+                                                src={item.image}
+                                                alt={item.name}
+                                                className="cart-item-image"
+                                            />
+                                            <div className="cart-item-info">
+                                                <p>{item.name}</p>
+                                                <p>
+                                                    {item.quantity} x $
+                                                    {item.price.toFixed(2)} = $
+                                                    {item.totalPrice.toFixed(2)}
+                                                </p>
+                                            </div>
                                         </li>
                                     ))}
                                 </ul>

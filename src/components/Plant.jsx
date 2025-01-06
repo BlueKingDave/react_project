@@ -29,7 +29,7 @@ const Plant = ({
 
     const handleAddToCart = () => {
         if (quantity > 0) {
-            addToCart(name, price, quantity); // Pass the original price (cart logic does discount)
+            addToCart(name, price, quantity, image); // Pass the original price (cart logic does discount)
             setShowDropdown(false);
         } else {
             alert('Please select a valid quantity.');

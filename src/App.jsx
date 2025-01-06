@@ -11,8 +11,9 @@ const App = () => {
     });
     const [discount, setDiscount] = useState(false);
 
+
     // Add items to the cart
-    const addToCart = (name, price, quantity) => {
+    const addToCart = (name, price, quantity, image) => {
         if (!name || !price || !quantity || isNaN(price) || isNaN(quantity)) {
             console.error("Invalid name, price, or quantity:", { name, price, quantity });
             return;
@@ -41,7 +42,7 @@ const App = () => {
                 // Add new item
                 updatedItems = [
                     ...prevCart.items,
-                    { name, price: finalPrice, quantity, totalPrice: itemTotalPrice },
+                    { name, price: finalPrice, quantity, totalPrice: itemTotalPrice, image },
                 ];
             }
 
@@ -53,21 +54,41 @@ const App = () => {
     };
 
     // **Remove** an entire item from the cart
-    const removeFromCart = (name) => {
-        setCart((prevCart) => {
-            const itemToRemove = prevCart.items.find((item) => item.name === name);
-            if (!itemToRemove) return prevCart; // If not found, do nothing
+   // Remove exactly one quantity of an item from the cart
+const removeFromCart = (name) => {
+    setCart((prevCart) => {
+        const existingItem = prevCart.items.find((item) => item.name === name);
+        if (!existingItem) return prevCart; // If not found, do nothing
 
-            // Remove this item entirely from the cart
+        // If item’s quantity is more than 1, just decrement
+        if (existingItem.quantity > 1) {
+            const updatedItems = prevCart.items.map((item) =>
+                item.name === name
+                    ? {
+                          ...item,
+                          quantity: item.quantity - 1,
+                          totalPrice: item.totalPrice - item.price, // remove one price worth
+                      }
+                    : item
+            );
+
+            return {
+                items: updatedItems,
+                totalPrice: prevCart.totalPrice - existingItem.price,
+            };
+        } else {
+            // If the quantity is exactly 1, remove the item entirely
             const updatedItems = prevCart.items.filter((item) => item.name !== name);
-            const updatedTotalPrice = prevCart.totalPrice - itemToRemove.totalPrice;
+            const updatedTotalPrice = prevCart.totalPrice - existingItem.totalPrice;
 
             return {
                 items: updatedItems,
                 totalPrice: updatedTotalPrice,
             };
-        });
-    };
+        }
+    });
+};
+
 
     // Reset the cart
     const resetCart = () => {
@@ -105,6 +126,7 @@ const App = () => {
                 totalPrice={cart.totalPrice.toFixed(2)}
                 cartItems={cart.items}
                 resetCart={resetCart}
+                removeFromCart={removeFromCart}
             />
             <ConnectWallet applyDiscount={applyDiscount} />
             <PlantList
