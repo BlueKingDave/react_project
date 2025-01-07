@@ -193,6 +193,27 @@
     display: flex;
     flex-direction: column;
 }
+.jh-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+.jh-logo:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+.jh-logo {
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}
+.jh-logo {
+    border-radius: 50%;
+    object-fit: cover;
+}
+.jh-logo {
+    border: 2px solid #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
 
 /* ====================== */
 /* RESPONSIVE STYLING */
@@ -265,4 +286,12 @@
     .remove-one-button:hover {
         background-color: darkred;
     }
+    .navbar-logo .jh-logo {
+        width: 50px; /* or desired width */
+        height: 50px; /* or desired height */
+        object-fit: contain; /* Keeps aspect ratio */
+    }
+    
+       
+    
 }

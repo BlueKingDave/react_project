@@ -9,12 +9,12 @@ const Plant = ({
     description,
     water,
     light,
+    isBestSale,
     addToCart,
     removeFromCart,
     inCart,
     discount,
 }) => {
-    const [showDropdown, setShowDropdown] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const [feedback, setFeedback] = useState('');
 
@@ -30,14 +30,9 @@ const Plant = ({
     const handleAddToCart = () => {
         if (quantity > 0) {
             addToCart(name, price, quantity, image); // Pass the original price (cart logic does discount)
-            setShowDropdown(false);
         } else {
             alert('Please select a valid quantity.');
         }
-    };
-
-    const toggleDropdown = () => {
-        setShowDropdown(!showDropdown);
     };
 
     const handleQuantityChange = (e) => {
@@ -51,7 +46,8 @@ const Plant = ({
         <div className="plant">
             <img src={image} alt={name} className="plant-image" />
             <div className="plant-content">
-                <h3>{name}</h3>
+                <h3>{name}{isBestSale ? <span>🔥</span> : <span>👎</span>}
+                </h3>
                 <p>{description}</p>
                 {/* Original & discounted price */}
                 <p className="price">
@@ -72,41 +68,36 @@ const Plant = ({
 
                 {/* Wrapper for Add/Remove and Dropdown */}
                 <div className="add-to-cart-wrapper">
-                    {/* Add to Cart Button */}
-                    <button className="add-to-cart" onClick={toggleDropdown}>
-                        Add to Cart
-                    </button>
-
-                    {/* Remove from Cart Button (if inCart) */}
-                    {inCart && (
-                        <button
-                            className="remove-from-cart"
-                            onClick={() => removeFromCart(name)}
-                        >
-                            -
+                    <div className="add-to-cart-container">
+                        <button className="add-to-cart" onClick={handleAddToCart}>
+                            Add to Cart ({quantity})
                         </button>
-                    )}
 
-                    {/* Quantity Dropdown */}
-                    {showDropdown && (
-                        <div className="dropdown">
-                            <label htmlFor={`quantity-${name}`}>Quantity:</label>
+                        {/* Remove from Cart Button */}
+                        {inCart && (
+                            <button
+                                className="remove-from-cart"
+                                onClick={() => removeFromCart(name)}
+                            >
+                                -
+                            </button>
+                        )}
+
+                        {/* Quantity Selector */}
+                        <div className="quantity-selector">
                             <select
                                 id={`quantity-${name}`}
                                 value={quantity}
                                 onChange={handleQuantityChange}
                             >
-                                {Array.from({ length: 11 }, (_, i) => (
-                                    <option key={i} value={i}>
-                                        {i}
+                                {Array.from({ length: 10 }, (_, i) => (
+                                    <option key={i + 1} value={i + 1}>
+                                        {i + 1}
                                     </option>
                                 ))}
                             </select>
-                            <button onClick={handleAddToCart} className="confirm-button">
-                                Confirm
-                            </button>
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
 

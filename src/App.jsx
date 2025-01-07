@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import PlantList from './components/PlantList';
 import ConnectWallet from './components/ConnectWallet';
@@ -10,7 +10,31 @@ const App = () => {
         totalPrice: 0,
     });
     const [discount, setDiscount] = useState(false);
+    const [favicon, setFavicon] = useState('/assets/JHlogo.png'); // Default favicon
 
+    // Function to update favicon dynamically
+    useEffect(() => {
+        const updateFavicon = (iconUrl) => {
+            const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+            link.type = 'image/png';
+            link.rel = 'icon';
+            link.href = iconUrl;
+            document.head.appendChild(link);
+        };
+
+        updateFavicon(favicon);
+    }, [favicon]);
+
+    // Update favicon based on cart state (example logic)
+    useEffect(() => {
+        if (cart.totalPrice > 100) {
+            setFavicon('/assets/high-cart-logo.png'); // Change to a specific logo if cart total > 100
+        } else if (discount) {
+            setFavicon('/assets/discount-logo.png'); // Change to a discount-specific logo
+        } else {
+            setFavicon('/assets/JHlogo.png'); // Default logo
+        }
+    }, [cart.totalPrice, discount]);
 
     // Add items to the cart
     const addToCart = (name, price, quantity, image) => {
@@ -53,42 +77,40 @@ const App = () => {
         });
     };
 
-    // **Remove** an entire item from the cart
-   // Remove exactly one quantity of an item from the cart
-const removeFromCart = (name) => {
-    setCart((prevCart) => {
-        const existingItem = prevCart.items.find((item) => item.name === name);
-        if (!existingItem) return prevCart; // If not found, do nothing
+    // Remove one quantity of an item from the cart
+    const removeFromCart = (name) => {
+        setCart((prevCart) => {
+            const existingItem = prevCart.items.find((item) => item.name === name);
+            if (!existingItem) return prevCart; // If not found, do nothing
 
-        // If item’s quantity is more than 1, just decrement
-        if (existingItem.quantity > 1) {
-            const updatedItems = prevCart.items.map((item) =>
-                item.name === name
-                    ? {
-                          ...item,
-                          quantity: item.quantity - 1,
-                          totalPrice: item.totalPrice - item.price, // remove one price worth
-                      }
+            // If item’s quantity is more than 1, just decrement
+            if (existingItem.quantity > 1) {
+                const updatedItems = prevCart.items.map((item) =>
+                    item.name === name
+                        ? {
+                              ...item,
+                              quantity: item.quantity - 1,
+                              totalPrice: item.totalPrice - item.price, // remove one price worth
+                          }
                     : item
-            );
+                );
 
-            return {
-                items: updatedItems,
-                totalPrice: prevCart.totalPrice - existingItem.price,
-            };
-        } else {
-            // If the quantity is exactly 1, remove the item entirely
-            const updatedItems = prevCart.items.filter((item) => item.name !== name);
-            const updatedTotalPrice = prevCart.totalPrice - existingItem.totalPrice;
+                return {
+                    items: updatedItems,
+                    totalPrice: prevCart.totalPrice - existingItem.price,
+                };
+            } else {
+                // If the quantity is exactly 1, remove the item entirely
+                const updatedItems = prevCart.items.filter((item) => item.name !== name);
+                const updatedTotalPrice = prevCart.totalPrice - existingItem.totalPrice;
 
-            return {
-                items: updatedItems,
-                totalPrice: updatedTotalPrice,
-            };
-        }
-    });
-};
-
+                return {
+                    items: updatedItems,
+                    totalPrice: updatedTotalPrice,
+                };
+            }
+        });
+    };
 
     // Reset the cart
     const resetCart = () => {

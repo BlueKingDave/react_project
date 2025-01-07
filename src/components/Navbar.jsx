@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import logo from '../assets/JHlogo.png';
 import './Navbar.css';
+import Cart from './Cart.jsx'
+
 
 const Navbar = ({ itemCount, totalPrice, resetCart, cartItems, removeFromCart }) => {
     const [showCartDetails, setShowCartDetails] = useState(false);
@@ -10,11 +13,27 @@ const Navbar = ({ itemCount, totalPrice, resetCart, cartItems, removeFromCart })
 
     const formattedTotalPrice = Number(totalPrice || 0).toFixed(2);
 
+    // Update document title when totalPrice changes
+    useEffect(() => {
+        document.title = `Jungle House: ${formattedTotalPrice}€ Purchases`;
+    }, [formattedTotalPrice]);
+
     return (
         <nav className="navbar">
             {/* Logo Section */}
             <div className="navbar-logo">
+                <img src={logo} alt="Jungle House" className="jh-logo" />
                 <h1>Jungle House</h1>
+                
+                {[2, 3, 4, 5].includes(new Date().getMonth()) ? (
+                    <p>Spring time baby <br />
+                        Repot those plants
+                    </p>
+                ) : (
+                    <p>No need to repot <br />
+                         Spring is in {new Date().getMonth() < 2 ? "a few months" : "later this year"}
+                    </p>
+                )}
             </div>
 
             {/* Navigation Links */}
@@ -32,60 +51,13 @@ const Navbar = ({ itemCount, totalPrice, resetCart, cartItems, removeFromCart })
             </div>
 
             {/* Cart Section */}
-            <div className="cart">
-                <div
-                    onClick={toggleCartDetails}
-                    className="cart-icon"
-                    style={{ cursor: 'pointer' }}
-                    tabIndex="0"
-                    aria-expanded={showCartDetails}
-                    onKeyDown={(e) => e.key === 'Enter' && toggleCartDetails()}
-                >
-                    🛒 Items: {itemCount}
-                </div>
-                <p>Total: ${formattedTotalPrice}</p>
-                <button onClick={resetCart} className="reset-cart">
-                    Reset Cart
-                </button>
-
-                {/* Cart Summary */}
-                {showCartDetails && (
-                    <div className="cart-summary">
-                        {Array.isArray(cartItems) && cartItems.length > 0 ? (
-                            <>
-                                <h3>Cart Details:</h3>
-                                <ul>
-                                    {cartItems.map((item, index) => (
-                                        <li key={index} className="cart-item">
-                                             <button
-                                                className="remove-one-button"
-                                                onClick={() => removeFromCart(item.name)} // same function
-                                            >
-                                                -
-                                            </button>
-                                            <img
-                                                src={item.image}
-                                                alt={item.name}
-                                                className="cart-item-image"
-                                            />
-                                            <div className="cart-item-info">
-                                                <p>{item.name}</p>
-                                                <p>
-                                                    {item.quantity} x $
-                                                    {item.price.toFixed(2)} = $
-                                                    {item.totalPrice.toFixed(2)}
-                                                </p>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </>
-                        ) : (
-                            <p>Your cart is empty!</p>
-                        )}
-                    </div>
-                )}
-            </div>
+            <Cart
+                itemCount={itemCount}
+                totalPrice={totalPrice}
+                resetCart={resetCart}
+                cartItems={cartItems}
+                removeFromCart={removeFromCart}
+            />
         </nav>
     );
 };

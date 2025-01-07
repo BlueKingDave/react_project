@@ -16,6 +16,7 @@ const plants = [
         description: 'A tropical plant with iconic split leaves, perfect for any home.',
         water: 3,
         light: 2,
+        isBestSale: true
     },
     {
         id: 7,
@@ -25,6 +26,7 @@ const plants = [
         description: 'A low-maisntenance plant with striking upright leaves.',
         water: 1,
         light: 3,
+        isBestSale: true
     },
     {
         id: 2,
@@ -34,6 +36,7 @@ const plants = [
         description: 'A low-maintenance plant with striking upright leaves.',
         water: 1,
         light: 3,
+        isBestSale: true
     },
     {
         id: 3,
@@ -43,6 +46,7 @@ const plants = [
         description: 'Known for its beautiful white blooms and air-purifying qualities.',
         water: 5,
         light: 2,
+        isBestSale: false
     },
     {
         id: 4,
@@ -52,6 +56,7 @@ const plants = [
         description: 'A resilient plant with charming pink flowers, ideal for beginners.',
         water: 1,
         light: 5,
+        isBestSale: false
     },
     {
         id: 5,
@@ -61,10 +66,11 @@ const plants = [
         description: 'A statement plant with large, glossy leaves for a modern look.',
         water: 4,
         light: 4,
+        isBestSale: false
     },
 ];
 
-const PlantList = ({ addToCart, removeFromCart, discount, cartItems }) => {
+const PlantList = ({ addToCart, removeFromCart, discount, cartItems}) => {
     return (
         <div className="plant-list">
             {plants.map((plant) => {
@@ -82,6 +88,7 @@ const PlantList = ({ addToCart, removeFromCart, discount, cartItems }) => {
                         description={plant.description}
                         water={plant.water}
                         light={plant.light}
+                        isBestSale={plant.isBestSale}
                         discount={discount}
                         addToCart={addToCart}
                         removeFromCart={removeFromCart}
