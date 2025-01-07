@@ -21,6 +21,10 @@ const Plant = ({
     // Calculate discounted price if discount is true
     const discountedPrice = discount ? price * 0.85 : price;
 
+    function handleClick() {
+        alert('That image is AI generated')
+    }
+
     const handleFeedbackSubmit = (e) => {
         e.preventDefault();
         alert(`Feedback submitted: ${feedback}`);
@@ -44,7 +48,7 @@ const Plant = ({
 
     return (
         <div className="plant">
-            <img src={image} alt={name} className="plant-image" />
+            <img src={image} alt={name} className="plant-image" onClick={handleClick}/>
             <div className="plant-content">
                 <h3>{name}{isBestSale ? <span>🔥</span> : <span>👎</span>}
                 </h3>
@@ -102,13 +106,13 @@ const Plant = ({
             </div>
 
             {/* Feedback Section */}
-            <div className="plant-feedback">
-                <h4>Review that plant</h4>
+            <div className="plant-feedback" >
+                <h4>Review that plant </h4>
                 <form onSubmit={handleFeedbackSubmit}>
                     <textarea
                         value={feedback}
                         onChange={(e) => setFeedback(e.target.value)}
-                        placeholder="Write your feedback here..."
+                        placeholder="Write your review here..."
                     />
                     <button type="submit">Submit</button>
                 </form>
